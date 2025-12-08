@@ -9,6 +9,7 @@ The purpose of this portfolio is to demonstrate my technical methodology, from i
 Each project contains the full assessment documentation in two accessible formats:
 
 | Format | File Type | Best For |
+| :--- | :--- | :--- |
 | **Browser View** | `.md` (Markdown) | **Technical Review.** Optimized for reading directly on GitHub. Allows for easy code-copying, searching, and quick technical verification. |
 | **Formal Report** | `.pdf` | **Offline / Executive.** A generated professional document suitable for archiving, printing, or sharing with stakeholders who prefer a finalized report format. |
 
