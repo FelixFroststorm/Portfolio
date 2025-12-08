@@ -17,4 +17,4 @@ Each project contains the full assessment documentation in two accessible format
 My approach applies a **Systems Engineering mindset** to security. I do not rely solely on automated tools; I focus on understanding the underlying logic of the target to identify design flaws and architectural vulnerabilities.
 
 ---
-*⚠️ **Disclaimer:** All content in this repository is for educational purposes. The techniques demonstrated here were performed on authorized targets (Hack The Box) in a controlled environment. Never attack systems without explicit authorization*
+*⚠️ **Disclaimer:** All content in this repository is for educational purposes. The techniques demonstrated here were performed on authorized targets (Hack The Box) in a controlled environment. Never attack systems without explicit authorization.*
