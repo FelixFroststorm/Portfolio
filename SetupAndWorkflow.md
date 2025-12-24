@@ -1,7 +1,7 @@
 #  My Engineering Setup & Workflow
 
 ##  Architectural Overview
-I utilize a modular approach to separates my **Knowledge Base** from my **Attack Infrastructure**, ensuring data persistence, structure and workflow efficiency.
+I utilize a modular approach to separates my knowledge base from my attack infrastructure, ensuring data persistence, structure and workflow efficiency.
 
 ### Host Machine
 * **Editor:** Visual Studio Code (VS Code)
@@ -18,7 +18,7 @@ I utilize a modular approach to separates my **Knowledge Base** from my **Attack
 
 
 ##  The "Golden Template" Methodology
-To ensure consistency and reproducibility across engagements, I utilize a structured logging system. Every engagement begins with a standardized Markdown template that forces the separation of raw data from analysis.
+To ensure consistency and reproducibility across engagements, I utilize a structured logging system. Every engagement begins with a standardized Markdown template.
 
 ### Documentation Structure
 1.  **Enumeration:** Enumeration, service discovery, and initial recon.
