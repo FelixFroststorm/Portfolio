@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "SetupAndWorkflow.md",
+                "file": "Writeups and reports/Moltbook marketing ploy.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "SetupAndWorkflow"
+              "title": "Moltbook marketing ploy"
             }
           }
         ]
@@ -185,6 +185,12 @@
   },
   "active": "19810764125af895",
   "lastOpenFiles": [
-    "README.md"
+    "moltpost.png",
+    "moltbook.png",
+    "verified.png",
+    "Moltbook register.png",
+    "README.md",
+    "Writeups and reports/Moltbook marketing ploy.md",
+    "SetupAndWorkflow.md"
   ]
 }
