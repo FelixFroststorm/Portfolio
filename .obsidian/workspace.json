@@ -11,13 +11,11 @@
             "id": "19810764125af895",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "pdf",
               "state": {
-                "file": "Writeups and reports/Moltbook marketing ploy.md",
-                "mode": "source",
-                "source": false
+                "file": "Writeups and reports/Moltbook marketing ploy.pdf"
               },
-              "icon": "lucide-file",
+              "icon": "lucide-file-text",
               "title": "Moltbook marketing ploy"
             }
           }
@@ -185,12 +183,13 @@
   },
   "active": "19810764125af895",
   "lastOpenFiles": [
-    "moltpost.png",
-    "moltbook.png",
-    "verified.png",
-    "Moltbook register.png",
-    "README.md",
     "Writeups and reports/Moltbook marketing ploy.md",
+    "Writeups and reports/Moltbook marketing ploy.pdf",
+    "Writeups and reports/moltbook.png",
+    "Writeups and reports/Moltbook register.png",
+    "Writeups and reports/moltpost.png",
+    "Writeups and reports/verified.png",
+    "README.md",
     "SetupAndWorkflow.md"
   ]
 }
