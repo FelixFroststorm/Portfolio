@@ -4,19 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "70666b69f6adaeea",
+        "id": "741e37a3bda11dd8",
         "type": "tabs",
         "children": [
           {
-            "id": "19810764125af895",
+            "id": "fcba0ce2e9d23718",
             "type": "leaf",
             "state": {
-              "type": "pdf",
-              "state": {
-                "file": "Writeups and reports/Moltbook marketing ploy.pdf"
-              },
-              "icon": "lucide-file-text",
-              "title": "Moltbook marketing ploy"
+              "type": "empty",
+              "state": {},
+              "icon": "lucide-file",
+              "title": "New tab"
             }
           }
         ]
@@ -181,7 +179,7 @@
       "bases:Create new base": false
     }
   },
-  "active": "19810764125af895",
+  "active": "27fe822c7cf1cd97",
   "lastOpenFiles": [
     "Writeups and reports/Moltbook marketing ploy.md",
     "Writeups and reports/Moltbook marketing ploy.pdf",
