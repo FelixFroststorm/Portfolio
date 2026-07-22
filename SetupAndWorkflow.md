@@ -4,35 +4,30 @@
 I utilize a modular approach to separates my knowledge base from my attack infrastructure, ensuring data persistence, structure and workflow efficiency.
 
 ### Host Machine
-* **Editor:** Visual Studio Code (VS Code)
-* **Role:** Documentation, Knowledge base, Reporting, Git Management, and SSH orchestration.
-* **Key Extensions:**
-    * *Markdown All in One:* For rapid documentation structure.
-    * *Paste Image:* For instant screenshot logging into report directories.
-    * *Markdown PDF:* For generating client-ready executive reports.
+* **Usage:** Documentation, Knowledge base, Reporting, Git Management, Host system for virtual machine.
+Obisidian is mainly used for both documenting, the knowledge base and reporting. 
 
 ### Attack Machine
 * **OS:** Kali Linux (Virtualized)
 * **Role:** Execution of offensive tools and network interaction.
-* **Connectivity:** Accessed via SSH from the Host to maintain a unified terminal interface within VS Code.
+* **Connectivity:** Oracle Virtualbox with mounted drive.
 
 
 ##  The "Golden Template" Methodology
-To ensure consistency and reproducibility across engagements, I utilize a structured logging system. Every engagement begins with a standardized Markdown template.
+To ensure consistency and reproducibility across engagements, I utilize a structured logging system. Every engagement begins with a standardized Markdown template. This will likely change over time as my methodology changes and improves.
 
 ### Documentation Structure
 1.  **Enumeration:** Enumeration, service discovery, and initial recon.
 2.  **Exploitation:** Precise recreation steps of the breach (Proof of Concept).
 3.  **Post-Exploitation:** Privilege escalation paths and artifact collection and/or privilege analysis.
 4.  **Exfiltration:** Flags, hashes, and sensitive data (stored securely).
-5.  **Suggested remediation:** Suggested remediations to harden, secure or reduce the possibility of exploitation.
+5.  **Suggested remediation:** Suggested remediations to harden, secure or reduce the possibility of exploitation. 
 
-Different engagements may differ slightly depending on what is found and reported.
-
-
+Different engagements may differ slightly depending on what is found and reported. 
+I strive to document my findings and thought process so that anyone could follow. I always document as-I-go rather than writing everything at the end.
 
 
 
 ##  Version Control & Security
 * **Repositories:** I maintain strict separation between active engagements (Private) and public portfolio work (Public).
-* **Sanitization:** All public writeups are scrubbed of sensitive client data or active contest flags before release.
+* **Sanitization:** All public writeups are cleared to be posted.
