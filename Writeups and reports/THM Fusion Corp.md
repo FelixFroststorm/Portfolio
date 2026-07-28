@@ -24,8 +24,8 @@ We then ping the target to ensure we are able to reach it:
 
 ## Enumeration
 Our initial scans yields these open ports at the target host:
-![[Pasted image 20260727091755.png|268]]
 
+![233](Images/Pasted%20image%2020260728114829.png)
 We see several services running on port:
 - [ ] 53: DNS
 - [ ] 80: HTTP web server
@@ -41,50 +41,55 @@ We see several services running on port:
 - [ ] 5985: Winrm
 
 Since there is a web server, we start out there, finding four employees, which we note.
-![[Pasted image 20260727091927.png|364]]
+![357](Images/Pasted%20image%2020260728114850.png)
+
 
 We start with checking ldap, rpc and smb for anon/guest access. SMB gives us the domain, which we save in /etc/hosts:
-![[Pasted image 20260727092203.png]]
+![625](Images/Pasted%20image%2020260728114907.png)
+
 
 Anonymous/guest user access does not yield anything else. We are able to connect to the RPC service anonymously, but we are unable to list usernames:
-![[Pasted image 20260727092814.png|505]]
+![499](Images/Pasted%20image%2020260728114922.png)
+
 
 Since we want usernames and have 4 likely names, we use a script to generate known versions of usernames:
-![[Pasted image 20260727094248.png]]
+![](Images/Pasted%20image%2020260728114943.png)
+
 and attempt to use Kerbrute, which does not find a valid username:
-![[Pasted image 20260727094338.png|405]]
+![409](Images/Pasted%20image%2020260728114956.png)
 Our initial Nmap scap showed a possible backup directory worth checking out:
-![[Pasted image 20260727094523.png|331]]
+![327](Images/Pasted%20image%2020260728115009.png)
 And sure enough, there is a sheet that gives us a possible list of usernames, which we save in the users.txt file as well:
-![[Pasted image 20260727094628.png|309]]
+![259](Images/Pasted%20image%2020260728115024.png)
 
 We attempt to use this new list with Kerbrute, which yields a valid user kparker:
-![[Pasted image 20260727094803.png|514]]
+![497](Images/Pasted%20image%2020260728115037.png)
 
 With a valid username, we can attempt asreproasting:
-![[Pasted image 20260727100552.png]]
+![](Images/Pasted%20image%2020260728115052.png)
 We obtain an asrephash which we save into asrephashes.txt that we can attempt to crack for credentials to the lparker user:
-![[Pasted image 20260727100921.png]]
+![](Images/Pasted%20image%2020260728115103.png)
 
 Since we now have a valid credentialset for lparker, we can attempt to enumerate against services.
 We start with attempting kerberoasting, which yields no results:
-![[Pasted image 20260727101239.png]]
+![](Images/Pasted%20image%2020260728115115.png)
 
 We should attempt credentials towards different services, which works against ldap:
-![[Pasted image 20260727102329.png]]
+![](Images/Pasted%20image%2020260728115124.png)
 
 We also see that user jmurphy has possible credentials in the description, which we should also check out, but before that we check other services:
-![[Pasted image 20260727102516.png]]
+![](Images/Pasted%20image%2020260728115140.png)
 We are likely to get a shell with winrm but before attempting that we want to list what shares this user has access to:
-![[Pasted image 20260727102554.png]]
+![](Images/Pasted%20image%2020260728115150.png)
 
 Not very exciting, so we continue with our newfound user jmurphy. Kerberoasting found no entries with this user, so we attempt to authenticate against services. We find that this user has write permissions to C$ and also read permission to the admin share:
-![[Pasted image 20260727105434.png]]
+![](Images/Pasted%20image%2020260728115201.png)
+
 
 We also check ldap, smb and rdp and both ldap and winrm vulnerable.
 
 In case we need it, we also set up Bloodhound in case we want to check the environment:
-![[Pasted image 20260728072621.png]]
+![](Images/Pasted%20image%2020260728115212.png)
 
 The files is then ingested into a Bloodhound instance running on localhost, ready for queries should we need them. 
 
@@ -92,18 +97,18 @@ The files is then ingested into a Bloodhound instance running on localhost, read
 ## Exploitation
 
 Since we saw that we could spawn a shell with winrm with the lparker user, we attempt that to see if we can find something interesting:
-![[Pasted image 20260727104409.png|301]]
+![357](Images/Pasted%20image%2020260728115223.png)
 We find the flag and then we type it:
-![[Pasted image 20260727104432.png]]
+![](Images/Pasted%20image%2020260728115235.png)
 
 We are also able to spawn a winrm for user jmurphy:
-![[Pasted image 20260727112737.png]]
+![](Images/Pasted%20image%2020260728115245.png)
 
 We first find the flag:
-![[Pasted image 20260727112821.png]]
+![](Images/Pasted%20image%2020260728115257.png)
   
   We also check which rights this user has and we see that the user has two privileges which together likely can be used to gain privilege escalation:
-  ![[Pasted image 20260727113357.png|399]]
+![506](Images/Pasted%20image%2020260728115310.png)
 
 **Vulnerability:** These setting likely lets this user download a copy of the sam file (users, password hashes and groups on the local computer) and the system.hive file (contains the cryptographic lock to that file). 
 
@@ -111,7 +116,7 @@ We first find the flag:
 ## Post-Exploitation (Privilege Escalation)
 
 We create a temp folder, go into it, ask for the sam file and the system.hive file and then we download it to our attacker machine:
-![[Pasted image 20260728074323.png|442]]
+![435](Images/Pasted%20image%2020260728115322.png)
 
 We also get the ntds.dit file, since that contains the usernames, hashes and groups for the whole domain, not just locally. To copy that file we have to do some more setups first.
 On the attacker machine:
@@ -126,21 +131,21 @@ expose %viper% x:
 And then run:
 unix2dos viper.dsh to convert it to the correct format.
 Then we upload it to the victim with our shell and run it with the diskshadow command:
-![[Pasted image 20260728082355.png]]
+![](Images/Pasted%20image%2020260728115336.png)
 We then use robocopy to download the exposed ntds.dit file, which we can then upload to your attacker machine.
-![[Pasted image 20260728082435.png|538]]
+![540](Images/Pasted%20image%2020260728115347.png)
 
 Our attacker can then use secretsdump to extract all the usernames and hashes:
-![[Pasted image 20260728082535.png|560]]
+![513](Images/Pasted%20image%2020260728115359.png)
 
 All we have to do now is to test for pass the hash attack with the domain controller administrator:
-![[Pasted image 20260728082922.png]]
+![](Images/Pasted%20image%2020260728115415.png)
 
 We spawn a shell with winrm:
-![[Pasted image 20260728083544.png|697]]
+![](Images/Pasted%20image%2020260728115425.png)
 
 And fetch the flag:
-![[Pasted image 20260728083755.png|427]]
+![459](Images/Pasted%20image%2020260728115436.png)
 
 
 

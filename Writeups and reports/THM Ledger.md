@@ -22,7 +22,7 @@ In each terminal we are using, we also set the environment variable for ip-addre
 
 ## Enumeration
 Our initial scans yields these open ports at the target host:
-![[Pasted image 20260724101632.png|608]]
+![](Images/Pasted%20image%2020260728115458.png)
 
 We see several services running on port:
 - [ ] 53: DNS
@@ -41,79 +41,79 @@ We see several services running on port:
 We start off by seeing if we can access ldap, rpc or smb with anonymous access.
 
 Anonymous ldap `netexec ldap $target -u '' -p '' --users` yields a userlist. 
-![[Pasted image 20260724104454.png]]
+![](Images/Pasted%20image%2020260728115510.png)
 It also suggests that some of these user has credentials that are set by default:
-![[Pasted image 20260724104303.png|525]]
+![](Images/Pasted%20image%2020260728115520.png)
 
 Anonymous smb also yields all users. We save it to a userlist.txt by running: `netexec smb $target -u 'guest' -p '' --rid-brute | grep -i 'sidtypeuser' | awk '{print$6}' | cut -d '\' -f2 | tee userlist.txt`
 
 ## Exploitation
 
 With the userlist, we can attempt asreproasting, which yields 5 asrep hashes:
-![[Pasted image 20260724124741.png]]
+![](Images/Pasted%20image%2020260728115532.png)
 
 After attempting 3 large wordlists, the asreproasts are unsuccessful. Since we likely have credentials from the ldap query, we can attempt Kerberoasting as well with these credentials.
 Kerberoasting also does not yield anything for now:
-![[Pasted image 20260724130555.png]]
+![](Images/Pasted%20image%2020260728115544.png)
 
 We can attempt password spraying for the open services, one of which yields valid credentials for the RDP service:
-![[Pasted image 20260724133300.png]]
+![](Images/Pasted%20image%2020260728115554.png)
 
 We successfully connect with RDP and find a user flag on the desktop:
-![[Pasted image 20260724133728.png|343]]
+![337](Images/Pasted%20image%2020260728115602.png)
 
 We should check which permissions she has by opening a shell and typing `whoami /all`
 And we see that she does not have a lot of permissions:
-![[Pasted image 20260724134146.png]]
+![](Images/Pasted%20image%2020260728115613.png)
 
 ## Post-Exploitation (Privilege Escalation)
 
 We then attempt to run some scripts to check for Privilege escalation. Since we mounted a share with attacking scripts, we must move them to a location that let's us execute it:
 `cd C:\Windows\Tasks` and then run
 `copy \\TSCLIENT\share\*` 
-![[Pasted image 20260724135243.png]]
+![](Images/Pasted%20image%2020260728115624.png)
 
 We see that antivirus flagged rubeus.exe and winPEASany.exe, which is correct, although the other scripts did not yield privelege escalation.
   
 This means we need to find another route to privilege escalation. We check to see what right our user has pertaining to certificate security settings, using the wiki https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation:
-![[Pasted image 20260725103619.png]]
+![](Images/Pasted%20image%2020260728115634.png)
 
 Checking the content of the output, we see that the enrollment rights of the certificate are allowed by authenticated users, which our user is a part of:
-![[Pasted image 20260725103846.png|509]]
+![539](Images/Pasted%20image%2020260728115643.png)
 The output of this also points to possible exploitable vulnerabilities, so we follow ESC1 in the wiki:
-![[Pasted image 20260725104037.png]]
+![](Images/Pasted%20image%2020260728115656.png)
 
 This vulnerability let's authenticated users request a certificate for anyone in the environment from the CA and the CA supplied me a certificate which authenticates us as the administrator when we show the certificate.
 
 We attempt to obtain the NT hash for the administrator, but are unsuccessful:
-![[Pasted image 20260725105637.png]]
+![](Images/Pasted%20image%2020260728115705.png)
 
 We can instead attempt to authenticate to a service that grants us admin rights, which we attempt to do with an ldap shell:
-![[Pasted image 20260725105750.png]]
+![](Images/Pasted%20image%2020260728115713.png)
 
 Since we do not know either our hash or our credentials as the admin user, we add our user to the domain admin group:
-![[Pasted image 20260725105848.png]]
+![](Images/Pasted%20image%2020260728115722.png)
 Verifying that the user got added:
-![[Pasted image 20260725105939.png]]
+![](Images/Pasted%20image%2020260728115730.png)
 
 We can now hashdump with the user and we attempt to do it against the smb service:
-![[Pasted image 20260725110021.png]]
+![](Images/Pasted%20image%2020260728115738.png)
 
 Since we now have the administrator hash we should check if we can spawn an admin shell, but it fails for some reason:
-![[Pasted image 20260725112222.png|697]]
+![](Images/Pasted%20image%2020260728115748.png)
 
 Since we have a valid path for getting certificates, we can attempt to do that with other domain controller users, in case the administrator user has configurations that does not let us exploit it. We launch bloodhound, fetch the file with our SUSANNA_MCKNIGHT user, ingest it and check for domain controllers in the environment:
-![[Pasted image 20260725112504.png|356]]
+![](Images/Pasted%20image%2020260728115756.png)
 
 Let's find the flag, which is likely located on an administrative account. We dump the hashes from all users into a file and also find the hash for Bradley:
-![[Pasted image 20260725113524.png]]
+![](Images/Pasted%20image%2020260728115805.png)
 
 We then spawn an admin shell:
-![[Pasted image 20260725114459.png]]
+![](Images/Pasted%20image%2020260728115814.png)
 
 
 We find the flag in the Administrator desktop:
-![[Pasted image 20260725114752.png]]
+![404](Images/Pasted%20image%2020260728115825.png)
 
 
 

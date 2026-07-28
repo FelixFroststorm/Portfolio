@@ -1,9 +1,7 @@
 #redis #tcp6379 
 
 **OS:** Linux
-**Difficulty:** Easy
-       
-
+      
 ## Executive summary
 Redis (REmote DIctionary Server) is an in-memory database designed for quick retrieval of data, for example prices for a store or a temperature reading off a sensor. It stores data in key-value pairs, for example temperature_london:25. In this case, the server was accessible from the internet without a password, which makes it vulnerable to being taken over.
 
@@ -22,7 +20,7 @@ This service is an in-memory database that is set to 6379 TCP by default. A quic
 Bash:
 `redis-cli -h $target -p 6379`
 
-![[Pasted image 20260709162740.png]]
+![](Images/Pasted%20image%2020260728114658.png)
 
   
 ## Exploitation
@@ -31,17 +29,19 @@ Bash:
 There are quite a few commands possible, so we turn to Google to check how we can interact with the service to exfiltrate the data. We find out that listing the keyspace shows us different keys. A key is a label connected to a value. If we run:
 `INFO keyspace` 
 it lists the indexed databases. 
- ![[Pasted image 20260709164802.png|495]]
+![453](Images/Pasted%20image%2020260728114710.png)
+
 
 Now we want to read those keys, and further googling shows that `SCAN *` lists the different keys:
-![[Pasted image 20260709165156.png|301]]
+![257](Images/Pasted%20image%2020260728114737.png)
 we then go on to read the value with `GET <key>`:
-![[Pasted image 20260709165234.png|287]]
 
+![257](Images/Pasted%20image%2020260728114754.png)
 The flag is of course our desired goal this time.
 
 Just to push a little further, we should also check if we have write permissions:
-![[Pasted image 20260709170320.png|364]]
+
+![297](Images/Pasted%20image%2020260728114811.png)
 We see that we do and that we created a key-value pair of temperature:22.
 
 ## Loot & Flags
