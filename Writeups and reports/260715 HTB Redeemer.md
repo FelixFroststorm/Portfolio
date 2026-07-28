@@ -29,19 +29,24 @@ Bash:
 There are quite a few commands possible, so we turn to Google to check how we can interact with the service to exfiltrate the data. We find out that listing the keyspace shows us different keys. A key is a label connected to a value. If we run:
 `INFO keyspace` 
 it lists the indexed databases. 
+
 ![453](Images/Pasted%20image%2020260728114710.png)
 
 
 Now we want to read those keys, and further googling shows that `SCAN *` lists the different keys:
+
 ![257](Images/Pasted%20image%2020260728114737.png)
+
 we then go on to read the value with `GET <key>`:
 
 ![257](Images/Pasted%20image%2020260728114754.png)
+
 The flag is of course our desired goal this time.
 
 Just to push a little further, we should also check if we have write permissions:
 
 ![297](Images/Pasted%20image%2020260728114811.png)
+
 We see that we do and that we created a key-value pair of temperature:22.
 
 ## Loot & Flags

@@ -6,7 +6,9 @@ Welcome. This repository serves as a living documentation of my journey in offen
 The purpose of this portfolio is to demonstrate my technical methodology, from initial enumeration to exploitation and remediation. It showcases my ability to not only execute technical attacks but to document them in a way that is useful to clients. 
 
 ##  Repository Structure
-All files are .md files that are eaither the resulting documentation from boxes on platforms like Hackthebox or Tryhackme.
+All files are .md files that are the resulting documentation from boxes on platforms like Hackthebox or Tryhackme.
+
+The files have the date format of YYMMDD in front of the name of the box, so that more recent work can be reviewed through sorting.
 
 ##  Methodology
 My approach applies a systems engineering mindset to security. While I expect my methodology to improve and develop over time, attempting to both see both the details and how those details relate to the big picture. I focus on understanding the underlying logic of the target to identify design flaws and architectural vulnerabilities. 
@@ -17,4 +19,4 @@ While AI may be useful in many cases, I believe that there are more cases where 
 When using AI, I generally use API with TypingMind as the frontend. This let's me try new (and old) models for different tasks without me having to rely on a subscripton.
 
 ---
-**Disclaimer:** All content in this repository is for educational purposes. The techniques demonstrated here were performed on authorized targets (Hack The Box) in a controlled environment. Never attack systems without explicit authorization.*
+**Disclaimer:** All content in this repository is for educational purposes. The techniques demonstrated here were performed on authorized targets (Hack The Box) in a controlled environment. Never attack systems without explicit authorization.
