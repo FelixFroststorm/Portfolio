@@ -8,7 +8,8 @@ There are many ways to share files between computers and their users. In this ca
 
 # Enumeration
 Nmap was used for initial enumeration, scanning open TCP ports:
-![[Pasted image 20260709124552.png]]
+![](../../00%20Main/05%20Images/Pasted%20image%2020260728114245.png)
+
 
 
 Notable ports are:
