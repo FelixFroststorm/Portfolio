@@ -28,7 +28,7 @@ We first attempt anonymouse and guest access to ldap, smb and rpc. The guest acc
 
 ![](Images/Pasted%20image%2020260729082149.png)
 
-We note the domain htb.active and then we attempt to connect to smb to read the contents:
+We note the domain active.htb and then we attempt to connect to smb to read the contents:
 
 ![](Images/Pasted%20image%2020260729082715.png)
 
@@ -49,7 +49,7 @@ We are able to connect to SMB with these credentials, so we navigate to the desk
 
 ![](Images/Pasted%20image%2020260729091427.png)
 
-Since we have valid credentials, we can also attempt kerberoasting, which yields the Administrator kerberoast hash:
+Since we have valid credentials, we can also attempt kerberoasting, which yields the Administrator TGS-REP ticket:
 
 ![](Images/Pasted%20image%2020260729091903.png)
 
@@ -60,11 +60,11 @@ Since we have valid credentials, we can also attempt kerberoasting, which yields
 
 ![](Images/Pasted%20image%2020260729092114.png)
 
-No reason to dilly dally here, so we attempt to get the --sam file from smb:
+We attempt to get the --sam file from smb, which we do:
 
 ![](Images/Pasted%20image%2020260729093419.png)
 
-And then we spawn a shell as the administrator:
+After that little sidetrack, we spawn a shell as the administrator:
 
 ![](Images/Pasted%20image%2020260729093454.png)
 
