@@ -21,56 +21,56 @@ We then ping the target to ensure we are able to reach it:
 
 ## Enumeration
 Our initial scans yields these open ports at the target host:
-![294](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729081148.png)
+![294](Images/Pasted%20image%2020260729081148.png)
 
 
 We first attempt anonymouse and guest access to ldap, smb and rpc. The guest account seems to be disabled, but we are able to list shares with anonymous:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729082149.png)
+![](Images/Pasted%20image%2020260729082149.png)
 
 We note the domain htb.active and then we attempt to connect to smb to read the contents:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729082715.png)
+![](Images/Pasted%20image%2020260729082715.png)
 
 After looking around inside the share, we find two interesting files, groups.xml that looks like it also contains the password:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729084643.png)
+![](Images/Pasted%20image%2020260729084643.png)
 
 Before attempting to authenticate, we start a kerbrute scan and also an enum4linux script. It does not yield much interesting.
 The string in cpassword is encrypted with AES. We attempt decryption, which works:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729090530.png)
+![](Images/Pasted%20image%2020260729090530.png)
 
 We now likely have a valid set of credentials which we can use to attempt asreproasting or authenticate to services. We attempt to use it against ldap, smb and rpc and we find that there is a share we can now read, likely containing users:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729090813.png)
+![](Images/Pasted%20image%2020260729090813.png)
 
 We are able to connect to SMB with these credentials, so we navigate to the desktop of the user in question to fetch the flag:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729091427.png)
+![](Images/Pasted%20image%2020260729091427.png)
 
 Since we have valid credentials, we can also attempt kerberoasting, which yields the Administrator kerberoast hash:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729091903.png)
+![](Images/Pasted%20image%2020260729091903.png)
 
 
 ## Exploitation
 
   We attempt to crack it with john the ripper, which gives us the password:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729092114.png)
+![](Images/Pasted%20image%2020260729092114.png)
 
 No reason to dilly dally here, so we attempt to get the --sam file from smb:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729093419.png)
+![](Images/Pasted%20image%2020260729093419.png)
 
 And then we spawn a shell as the administrator:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729093454.png)
+![](Images/Pasted%20image%2020260729093454.png)
 
 We go to the desktop to fetch the flag:
 
-![](../../../../../../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260729093727.png)
+![](Images/Pasted%20image%2020260729093727.png)
 
 
   
