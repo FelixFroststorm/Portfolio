@@ -3,16 +3,17 @@
 **OS:** Windows  
 
 
-## Executive summary
+# Executive summary
 
-On this active directory machine, we are able to get credentials from a user because there is a public share open to anyone through anonymous access. The username was listed together with the password which was encrypted with AES. Microsoft stores the decryption key in their documentation, which makes it unsecure and easily crackable. With valid credentials, at Kerberoasting attack was conducted and we were able to get the Administrator Kerberos hash. This hash was crackable as well, which yielded that Administrator password, which fully compromised the domain. Suggestions for remediation is located at the end of the document.
+On this active directory machine, we are able to get credentials from a user because a public share was open to anyone through anonymous access, containing a file with credentials. The username was listed together with the password which was encrypted with AES. Microsoft stores the decryption key in their documentation, which makes it unsecure and easily crackable. With valid credentials, a Kerberoasting attack was conducted and we were able to get the Administrator password because the Administrator was configured as a service account and the administrator also had a relatively short password, which fully compromised the domain. Suggestions for remediation is located at the end of the document.
+
 
 ## Initial setup
 First, we connect over VPN where the target is located. 
 
 We then create our folder and start it:
 `mkdir HTBActive && cd HTBActive`
-In each terminal we are using, we also set the environment variable for ip-address. This makes it easier to fetch commands from our knowledge vault and also reduced typos:
+In each terminal we are using, we also set the environment variable for ip-address. This makes it easier to fetch commands from our knowledge vault and also reduces typos:
 `export target=10.129.48.202`
 
 We then ping the target to ensure we are able to reach it:
@@ -24,7 +25,7 @@ Our initial scans yields these open ports at the target host:
 ![294](Images/Pasted%20image%2020260729081148.png)
 
 
-We first attempt anonymouse and guest access to ldap, smb and rpc. The guest account seems to be disabled, but we are able to list shares with anonymous:
+We first attempt anonymous and guest access to ldap, smb and rpc. The guest account seems to be disabled, but we are able to list shares with anonymous:
 
 ![](Images/Pasted%20image%2020260729082149.png)
 
@@ -60,11 +61,7 @@ Since we have valid credentials, we can also attempt kerberoasting, which yields
 
 ![](Images/Pasted%20image%2020260729092114.png)
 
-We attempt to get the --sam file from smb, which we do:
-
-![](Images/Pasted%20image%2020260729093419.png)
-
-After that little sidetrack, we spawn a shell as the administrator:
+We then spawn a shell as the administrator:
 
 ![](Images/Pasted%20image%2020260729093454.png)
 
@@ -90,17 +87,33 @@ Administrator:Ticketmaster1968
 
 
 ## Suggestions / Remediation
-Several parts made the compromise possible. Here are suggested remediations:
+Several parts made the compromise possible. Here are suggested remediations in order of severity.
+### Credentials should not be saved in files
+**Severity: Critical**
+**Technique:** Credential access, T1552.006 (https://attack.mitre.org/techniques/T1552/006/)
 
-#### Deny anonymous access
-The file with credentials was accessed due to anonymous access being open. If shares has to have anonymous access, ensure that no sensitive information is left on it.
+**Description:** The initial access was obtained due to an xml-file that included both username and an encrypted password that was crackable. The specific variable that stores the password was the cpassword attribute. 
 
-#### Credentials should not be saved in files
-The initial access was obtained due to an xml-file that included both username and an encrypted password that was crackable. The specific variable that stores the password was the cpassword attribute. Microsoft has released a securitybulletin to remediate the issue which can be read here: 
-https://learn.microsoft.com/en-us/security-updates/securitybulletins/2014/ms14-025
+**Remediation:** Microsoft has released a securitybulletin to remediate the issue which can be read here: https://learn.microsoft.com/en-us/security-updates/securitybulletins/2014/ms14-025 
+Also, remove any files in shares that has the cpassword attribute set.
+### Administrative account should never be configured as a service account 
+**Severity: Critical**
+**Technique:** Credential access, T1558.003 (https://attack.mitre.org/techniques/T1558/003/)
 
-#### Administrative account should never be configured as a service account
-The administrator account was configured with a SPN, making it a service account that should never have administrative rights. In this environment, the administrative Kerberos hash was obtained because a valid user with valid credentials asked the KDC for a ticket granting ticket, then asked the KDC for a service ticket which was then cracked offline to obtain the password of the administrator. The Administrator also had a short password, which means that it was easily crackable.
+**Description:** The administrator account was configured with a SPN, making it a service account that should never have administrative rights. Using valid credentials (SVC_TGS), we obtained a TGT and used it to request a service ticket (TGS) for the Administrator account's SPN. The KDC returned a TGS encrypted with the service account's password hash, which we cracked offline to recover the Administrator password.
 
-#### Consider establishing or updating the password policy
-Administrators should never have accounts with easily crackable passwords. Administrators (at least) should not have passwords that are easily crackable, and increasing the password length will greatly defend against many attacks. Establish a policy of at least 24 characters.
+**Remediation:** Do not assign SPNs to privileged accounts. Service accounts should follow least privilege and must not be members of privileged groups such as Domain Admins. 
+
+### Establish or update the password policy
+**Severity: High**
+**Technique:** Credential access, T1110.002 (https://attack.mitre.org/techniques/T1110/002/)
+
+**Description:** The Administrator also had a short password, which means that it was easily crackable. Administrators (at least) should not have passwords that are easily crackable, and increasing the password length will greatly defend against many attacks. Establish a policy of at least 24 characters for Administrative accounts.
+
+**Remediation:** Establish or update the password policy in regards to length for Administrative users.
+### Deny anonymous access
+**Severity: Medium**
+**Technique:** Discovery, T1135 (https://attack.mitre.org/techniques/T1135/)
+**Description:** The file with credentials was accessed due to anonymous access being open. If shares have to have anonymous access, ensure that no sensitive information is left on it.
+
+**Remediation:** Restrict anonymous/null-session access to shares.

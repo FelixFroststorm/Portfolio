@@ -3,8 +3,8 @@
 
 
 ## Executive summary
-In this scenario, we are playing the role of a pentester that will validate a hardened environment after an initial pentesting engagement. Through several steps, we are able to get credentials to one user, which in turn can be used to obtain another user with dangerous privileges which in turn could be used to escalete privileges to the administrator for the whole domain, which means that the whole domain is compromised and in need of further hardening. 
-The initial user had pre-authentication disabled, which means that we were able to find his password. With credentials, we were able to find another set of credentials from a user that had dangerous settings which in turn gave us administrative privileges, compromising the whole domain. Remediations are suggested at the end of this document.
+In this scenario, we are playing the role of a pentester that will validate a hardened environment after an initial pentesting engagement. Through several steps, we are still able to get credentials to one user, which in turn was used to obtain another user configured with dangerous privileges that was used to escalete privileges to the administrator for the whole domain.  
+The initial user had pre-authentication disabled, which means that we were able to find his password through an asreproasting attack. With credentials, we were able to find another set of credentials from a user that was configured with dangerous privileges which in turn gave us administrative privileges, compromising the whole domain. Remediations are suggested at the end of this document.
 
 
 ## Initial setup
@@ -207,15 +207,17 @@ Action: Enable Kerberos pre-authentication for this users, and check for others.
 **Remediation steps**
 Find vulnerable users in Powershell:
 
+```
 Get-ADUser -Filter * -Properties DoesNotRequirePreAuth |
     Where-Object { $_.DoesNotRequirePreAuth -eq $true } |
     Select-Object Name, SamAccountName
+```
 
-Remediate by running:
+and remediate (change to other users if others are present):
 
+```
 Set-ADAccountControl -Identity lparker -DoesNotRequirePreAuth $false
-
-
+```
 
 ### Credential federation should be changed to a more robust process
 **Vulnerability:** User had credentials in plaintext in their user description in ldap. 
