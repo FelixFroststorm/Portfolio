@@ -148,17 +148,6 @@ Userflag: THM{ed882d02b34246536ef7da79062bef36}
 Administrator flag: THM{1a1fa94875421296331f145971ca4881}
 
 #### Usernames:Passwords
-
-atlbitbucket
-LAB-DC$
-ENTERPRISE$
 bitbucket:littleredbucket
 nik:ToastyBoi!
-replication
-spooks
-korone
-banana
-Cake
-contractor-temp
-varg
-joiner
+
