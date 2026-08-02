@@ -1,5 +1,8 @@
 This document show different iterations in methodology, setup and similar. It contains high-level changes, not smaller changes in notes or similar.
 
+#### 2nd of August 2026
+Starting from August 3rd, flags, hashes and credentials will be redacted from the final report.
+
 #### 28th of July 2026
 Changed from pdf files in repo to .md files for better readability directly on Github
 
