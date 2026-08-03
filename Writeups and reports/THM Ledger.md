@@ -1,6 +1,7 @@
 #THM #AD
-OS:Windows  
 
+**OS:** Windows  
+**Date:** 25th of July 2026
 ## Executive summary
 In this Windows environment, we were able to get administrative privileges by exploiting a vulnerability in the certificate template configuration. The vulnerability enables a user to request a valid certificate from anyone in the group "authenticated user". As long as we have credentials, we are able to request a valid certificate, which we can then use to authenticate to any service as an administrator. To get the user access, we were able to list all users with anonymous access through ldap and in the description of two users, the password credential was shown in cleartext which is likely a default password set by an administrator. In this environment, there is several suggested remediations:
 - Disable anonymous access (Used to get initial foothold)

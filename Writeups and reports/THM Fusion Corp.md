@@ -1,6 +1,7 @@
-#AD #THM 
-**OS:** Windows  
+#THM #AD 
 
+**OS:** Windows  
+**Date:** 28th of July 2026
 
 ## Executive summary
 In this scenario, we are playing the role of a pentester that will validate a hardened environment after an initial pentesting engagement. Through several steps, we are still able to get credentials to one user, which in turn was used to obtain another user configured with dangerous privileges that was used to escalete privileges to the administrator for the whole domain.  

@@ -1,7 +1,7 @@
 #THM #AD 
 
 **OS:** Windows  
-
+**Date:** 20th of July 2026
 ## Executive summary
 
 In this box, we exploit vulnerabilities in Active Directory with a technique called Asreproasting and Kerberoasting. We get access to credentials through misconfiguration in the AD environment. After we find usernames, we are able to request crackable password hashes which we can then use to find real credentials, which we in turn use to move inside the environment to progress further. A service user was found that has too elaborate rights which in turn made it possible to become the Administrator of the environment.

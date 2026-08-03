@@ -1,7 +1,7 @@
 #HTB #AD 
 
 **OS:** Windows  
-
+**Date:** 29th of July 2026
 
 # Executive summary
 

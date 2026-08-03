@@ -1,5 +1,6 @@
 #HTB #SMB
 
+**Date:** 9th of July 2026
 # Executive summary
 There are many ways to share files between computers and their users. In this case, a service called SMB (Server Message Block) was set up to share files. This is a common way of sharing files in a Windows environment. It was vulnerable due to misconfiguration by allowing a guest user with no credentials to access the files. 
 

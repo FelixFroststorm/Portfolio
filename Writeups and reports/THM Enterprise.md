@@ -1,7 +1,7 @@
 #THM #AD 
 
 **OS:** Windows  
-
+**Date:** 2nd of August 2026
 # Attack chain
 The attack path in this scenario was:
 1. Guest enumeration with SMB

@@ -1,7 +1,7 @@
 #HTB #redis #tcp6379 
 
 **OS:** Linux
-      
+**Date:** 9th of July 2026      
 ## Executive summary
 Redis (REmote DIctionary Server) is an in-memory database designed for quick retrieval of data, for example prices for a store or a temperature reading off a sensor. It stores data in key-value pairs, for example temperature_london:25. In this case, the server was accessible from the internet without a password, which makes it vulnerable to being taken over.
 
