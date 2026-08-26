@@ -9,7 +9,7 @@ In this box, we were able to get initial credentials by accessing a share that w
 ## Enumeration
 Our initial scans yields these open ports at the target host:
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826121909.png)
+![](Images/Pasted%20image%2020260826121909.png)
 
 First we attempt to check some low-hanging fruits by trying anonymous/guest smb, rpc and ldap.
 
@@ -18,7 +18,7 @@ We are able to authenticate with rpc, but we do not have rights to get users. Ld
 netexec smb $target -u 'Guest' -p '' --shares
 ```
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826093259.png)
+![](Images/Pasted%20image%2020260826093259.png)
 
 We note that the domain name is cicada.htb as well and put it in /etc/hosts.
 Since we want usernames, we attempt to read it.
@@ -26,11 +26,11 @@ Since we want usernames, we attempt to read it.
 smbclient -U Guest //$target/HR
 ```
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826105303.png)
+![](Images/Pasted%20image%2020260826105303.png)
 
 We fetch the note from HR and see that it contains default credentials.
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826105400.png)
+![](Images/Pasted%20image%2020260826105400.png)
 
 Since we have default credentials, we want to attempt password spraying once we get usernames.
 Since the guest user did authenticate to smb, we can attempt rid brute, which works. So we do it again to get a userlist directly into users.txt:
@@ -38,7 +38,7 @@ Since the guest user did authenticate to smb, we can attempt rid brute, which wo
 netexec smb $target -u 'Guest' -p '' --rid-brute | grep -i 'sidtypeuser' | awk '{print$6}' | cut -d '' -f2 | tee users.txt
 ```
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826110036.png)
+![](Images/Pasted%20image%2020260826110036.png)
 
 We replace CICADA\ with nothing and we attempt password spraying:
 ```
@@ -46,7 +46,7 @@ netexec smb $target -u users.txt -p '******' --continue-on-success
 ```
 
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Skjermbilde%202026-08-26%20110225.png)
+![](Images/Skjermbilde%202026-08-26%20110225.png)
 
 And sure enough, we are able to authenticate with the michael.wrightson user.
 ## Exploitation
@@ -71,30 +71,30 @@ then go to <http://127.0.0.1:8080> with user admin and password u got from the g
 
 We then ingest the file and add michael.wrightson to owned:
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826111725.png)
+![](Images/Pasted%20image%2020260826111725.png)
 
 Bloodhound does not show any interesting paths forward, so we enumerate further.
 We look at the RPC service and attempt enumdomusers, which reveals credentials in the description for user david.orelious:
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826112757.png)
+![](Images/Pasted%20image%2020260826112757.png)
 
 To be thorough, we attempt spraying here as well, in case this password is shares by others. 
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826112938.png)
+![](Images/Pasted%20image%2020260826112938.png)
 
 It isn't, but we validated that david.orelious has this password. We set him as owned in Bloodhound and see if we have a path forward. He does not have access to winrm, but he does have read access to the DEV share. We attempt to access it:
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826113446.png)
+![](Images/Pasted%20image%2020260826113446.png)
 
 We fetch the file and look what is in there.
 It contains credentials for emily.oscard:
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826113555.png)
+![](Images/Pasted%20image%2020260826113555.png)
 
 Now, let's attempt to authenticate with her.
 We are able to authenticate to winrm with shell, so we attempt to spawn one:
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826115047.png)
+![](Images/Pasted%20image%2020260826115047.png)
 
 We are able to do it. We set her to owned in Bloodhound and look for privelege escalation now.
 
@@ -103,7 +103,7 @@ We check her groups, user info and privileges first with
 whoami /all
 ```
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826121747.png)
+![](Images/Pasted%20image%2020260826121747.png)
 
  and sure enough she has SeRestorePrivilege and SeBackupprivilege, which are dangerous permissions to have together.
  
@@ -128,14 +128,14 @@ download system
 download sam
 ```
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826120219.png)
+![](Images/Pasted%20image%2020260826120219.png)
 
 On the attacker machine, we now run:
 ```
 impacket-secretsdump -sam sam -system system local
 ```
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826120250.png)
+![](Images/Pasted%20image%2020260826120250.png)
 
 It outputs the Administrative nthash which we can use as a pass-the-hash attack.
 No need to dilly dally, we attempt it right away:
@@ -144,7 +144,7 @@ No need to dilly dally, we attempt it right away:
 evil-winrm -u Administrator -H ****** -i $target
 ```
 
-![](../../../../../0%20Github%20portfolio/Writeups%20and%20reports/Images/Pasted%20image%2020260826120548.png)
+![](Images/Pasted%20image%2020260826120548.png)
 
 And sure enough it works, resulting in complete Domain compromise.
 
